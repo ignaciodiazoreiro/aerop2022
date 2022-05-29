@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AirportApplicationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Aeropuertos">
+    <Key>
+      <PropertyRef Name="codigoAeropuertoPK" />
+    </Key>
+    <Property Name="codigoAeropuertoPK" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="nombreAeropuerto" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="direccion" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="habilitado" Type="nvarchar" MaxLength="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Rutas">
+    <Key>
+      <PropertyRef Name="idRutaPK" />
+    </Key>
+    <Property Name="idRutaPK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="codigoVuelo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="companiaAerea" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="diaSemana" Type="nvarchar" MaxLength="15" Nullable="false" />
+    <Property Name="pais" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="arrivalDeparture" Type="nvarchar" MaxLength="1" Nullable="false" />
+    <Property Name="capacidadMaxima" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Vuelos">
+    <Key>
+      <PropertyRef Name="idVueloPK" />
+    </Key>
+    <Property Name="idVueloPK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="idRutaFK" Type="int" Nullable="false" />
+    <Property Name="codigoAeropuertoFK" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="codigoVuelo" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="fecha" Type="date" Nullable="false" />
+    <Property Name="cantidadRealPasajeros" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Vuelos_Aeropuertos">
+    <End Role="Aeropuertos" Type="Self.Aeropuertos" Multiplicity="1" />
+    <End Role="Vuelos" Type="Self.Vuelos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Aeropuertos">
+        <PropertyRef Name="codigoAeropuertoPK" />
+      </Principal>
+      <Dependent Role="Vuelos">
+        <PropertyRef Name="codigoAeropuertoFK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Vuelos_Rutas">
+    <End Role="Rutas" Type="Self.Rutas" Multiplicity="1" />
+    <End Role="Vuelos" Type="Self.Vuelos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rutas">
+        <PropertyRef Name="idRutaPK" />
+      </Principal>
+      <Dependent Role="Vuelos">
+        <PropertyRef Name="idRutaFK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AirportApplicationModelStoreContainer">
+    <EntitySet Name="Aeropuertos" EntityType="Self.Aeropuertos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rutas" EntityType="Self.Rutas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Vuelos" EntityType="Self.Vuelos" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Vuelos_Aeropuertos" Association="Self.FK_Vuelos_Aeropuertos">
+      <End Role="Aeropuertos" EntitySet="Aeropuertos" />
+      <End Role="Vuelos" EntitySet="Vuelos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Vuelos_Rutas" Association="Self.FK_Vuelos_Rutas">
+      <End Role="Rutas" EntitySet="Rutas" />
+      <End Role="Vuelos" EntitySet="Vuelos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
